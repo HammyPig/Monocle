@@ -59,6 +59,7 @@ class Transactions:
 
         for row in sheet.iter_rows(min_row=2, values_only=True):
             date = row[1]
+            date = datetime.strptime(date, "%d-%m-%Y")
 
             if row[3] == "BUY":
                 action = "buy"
@@ -66,8 +67,8 @@ class Transactions:
                 action = "sell"
 
             stock = row[0]
-            units = row[4]
-            amount = abs(row[6])
+            units = int(row[4])
+            amount = abs(float(row[6]))
 
             transaction = Transactions.Transaction(date, action, stock, units, amount)
             self.transactions.append(transaction)
