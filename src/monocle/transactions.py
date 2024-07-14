@@ -10,6 +10,9 @@ class Transactions:
             self.stock = stock
             self.units = units
             self.amount = amount
+        
+        def __repr__(self):
+            return f"{self.date}: {self.action} {self.units}x{self.stock} for {self.amount}"
 
     def __init__(self):
         self.transactions = []
