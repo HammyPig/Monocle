@@ -46,6 +46,8 @@ class Transactions:
         self.transactions = sorted(self.transactions, key=lambda transaction: transaction.date)
 
     def add_commsec_transactions(self, file):
+        transactions = []
+
         with open(file, "r") as f:
             csv_reader = csv.reader(f)
             next(csv_reader) # skip header row
@@ -73,11 +75,14 @@ class Transactions:
                     amount = float(row[4])
 
                 transaction = Transactions.Transaction(date, action, stock, units, amount)
-                self.transactions.append(transaction)
+                transactions.append(transaction)
 
+        transactions = transactions[::-1]
+        self.transactions += transactions
         self.sort_transactions_by_date()
 
     def add_stake_transactions(self, file):
+        transactions = []
         wb = load_workbook("Stake_AccountSummaryAUS_010201-120724.xlsx")
         sheet = wb["Trades"]
 
@@ -95,6 +100,8 @@ class Transactions:
             amount = abs(float(row[6]))
 
             transaction = Transactions.Transaction(date, action, stock, units, amount)
-            self.transactions.append(transaction)
+            transactions.append(transaction)
         
+        transactions = transactions[::-1]
+        self.transactions += transactions
         self.sort_transactions_by_date()
