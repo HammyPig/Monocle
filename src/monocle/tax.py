@@ -4,11 +4,11 @@ class Tax:
             self.units = units
             self.cost_base = cost_base
 
-    def get_capital_gains(transactions, start_date, end_date):
+    def get_capital_gains(portfolio, start_date, end_date):
         capital_gains = 0
         share_parcels = {}
 
-        for t in transactions.transactions:
+        for t in portfolio.transactions:
             if t.action == "buy":
                 if t.stock not in share_parcels: share_parcels[t.stock] = []
                 cost_base = t.amount / t.units
