@@ -123,7 +123,6 @@ class Portfolio:
 
                 if type == "Direct Credit":
                     amount = float(row[1])
-                    self.dividends.append(Portfolio.Dividend(date, amount))
                 elif type == "DRP":
                     action = "buy"
                     stock = row[3]
@@ -131,9 +130,12 @@ class Portfolio:
 
                     if units == 0: continue
 
-                    amount = units * float(row[4])
+                    drp_share_price = float(row[4])
+                    amount = units * drp_share_price
 
                     transaction = Portfolio.Transaction(date, action, stock, units, amount)
                     self.transactions.append(transaction)
+
+                self.dividends.append(Portfolio.Dividend(date, amount))
 
         self.sort_transactions_by_date()
