@@ -135,6 +135,5 @@ class Portfolio:
 
                     transaction = Portfolio.Transaction(date, action, stock, units, amount)
                     self.transactions.append(transaction)
-                    print(transaction)
 
         self.sort_transactions_by_date()
