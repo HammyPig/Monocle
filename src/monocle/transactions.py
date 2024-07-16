@@ -20,7 +20,28 @@ class Transactions:
     def print_transactions(self):
         for t in self.transactions:
             print(t.date, t.action, t.stock, t.units, t.amount)
-            
+
+    def validate_transactions(self):
+        shares = {}
+        dividends = {}
+
+        for t in self.transactions:
+            if t.stock not in shares: shares[t.stock] = 0
+
+            if t.action == "buy":
+                shares[t.stock] += t.units
+            elif t.action == "sell":
+                shares[t.stock] -= t.units
+                if shares[t.stock] < 0:
+                    if t.stock not in dividends: dividends[t.stock] = 0
+                    dividends[t.stock] += -shares[t.stock]
+                    shares[t.stock] = 0
+
+        print(dividends)
+        
+        return True
+
+
     def sort_transactions_by_date(self):
         self.transactions = sorted(self.transactions, key=lambda transaction: transaction.date)
 
