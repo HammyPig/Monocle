@@ -124,7 +124,7 @@ class Portfolio:
                 type = row[2]
 
                 if type == "Direct Credit":
-                    amount = row[1]
+                    amount = float(row[1])
                     self.dividends.append(Portfolio.Dividend(date, amount))
                 elif type == "DRP":
                     action = "buy"
