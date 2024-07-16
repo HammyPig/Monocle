@@ -2,7 +2,7 @@ import csv
 from datetime import datetime
 from openpyxl import load_workbook
 
-class Transactions:
+class Portfolio:
     class Transaction:
         def __init__(self, date, action, stock, units, amount):
             self.date = date
@@ -74,7 +74,7 @@ class Transactions:
                 elif action == "sell":
                     amount = float(row[4])
 
-                transaction = Transactions.Transaction(date, action, stock, units, amount)
+                transaction = Portfolio.Transaction(date, action, stock, units, amount)
                 transactions.append(transaction)
 
         transactions = transactions[::-1]
@@ -99,7 +99,7 @@ class Transactions:
             units = int(row[4])
             amount = abs(float(row[6]))
 
-            transaction = Transactions.Transaction(date, action, stock, units, amount)
+            transaction = Portfolio.Transaction(date, action, stock, units, amount)
             transactions.append(transaction)
         
         transactions = transactions[::-1]
