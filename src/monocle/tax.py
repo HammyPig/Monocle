@@ -32,4 +32,8 @@ class Tax:
                     sold_units -= shares_sold_from_parcel
                     if sold_units == 0: break
 
+        for d in portfolio.dividends:
+            if d.date >= start_date and d.date <= end_date:
+                capital_gains += d.amount
+
         return capital_gains
