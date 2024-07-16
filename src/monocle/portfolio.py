@@ -13,9 +13,15 @@ class Portfolio:
         
         def __repr__(self):
             return f"{self.date}: {self.action} {self.units}x{self.stock} for {self.amount}"
+        
+    class Dividend:
+        def __init__(self, date, amount):
+            self.date = date
+            self.amount = amount
 
     def __init__(self):
         self.transactions = []
+        self.dividends = []
 
     def print_transactions(self):
         for t in self.transactions:
@@ -104,4 +110,33 @@ class Portfolio:
         
         transactions = transactions[::-1]
         self.transactions += transactions
+        self.sort_transactions_by_date()
+
+    def add_dividends(self, file):
+        with open(file, "r") as f:
+            csv_reader = csv.reader(f)
+            next(csv_reader) # skip header row
+
+            for row in csv_reader:
+                date = row[0]
+                date = datetime.strptime(date, "%d/%m/%Y")
+
+                type = row[2]
+
+                if type == "Direct Credit":
+                    amount = row[1]
+                    self.dividends.append(Portfolio.Dividend(date, amount))
+                elif type == "DRP":
+                    action = "buy"
+                    stock = row[3]
+                    units = int(row[5])
+
+                    if units == 0: continue
+
+                    amount = units * float(row[4])
+
+                    transaction = Portfolio.Transaction(date, action, stock, units, amount)
+                    self.transactions.append(transaction)
+                    print(transaction)
+
         self.sort_transactions_by_date()
