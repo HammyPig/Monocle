@@ -29,7 +29,7 @@ class Portfolio:
 
     def validate_transactions(self):
         shares = {}
-        dividends = {}
+        invalid_shares = {}
 
         for t in self.transactions:
             if t.stock not in shares: shares[t.stock] = 0
@@ -39,14 +39,12 @@ class Portfolio:
             elif t.action == "sell":
                 shares[t.stock] -= t.units
                 if shares[t.stock] < 0:
-                    if t.stock not in dividends: dividends[t.stock] = 0
-                    dividends[t.stock] += -shares[t.stock]
+                    if t.stock not in invalid_shares: invalid_shares[t.stock] = 0
+                    invalid_shares[t.stock] += -shares[t.stock]
                     shares[t.stock] = 0
+                    print(t)
 
-        print(dividends)
-        
-        return True
-
+        print(invalid_shares)
 
     def sort_transactions_by_date(self):
         self.transactions = sorted(self.transactions, key=lambda transaction: transaction.date)
