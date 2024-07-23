@@ -111,6 +111,8 @@ class Portfolio:
         self.sort_transactions_by_date()
 
     def add_dividends(self, file):
+        drp_residual_balance = {}
+
         with open(file, "r") as f:
             csv_reader = csv.reader(f)
             next(csv_reader) # skip header row
@@ -118,19 +120,21 @@ class Portfolio:
             for row in csv_reader:
                 date = row[0]
                 date = datetime.strptime(date, "%d/%m/%Y")
-
+                amount = float(row[1])
                 type = row[2]
 
-                if type == "Direct Credit":
-                    amount = float(row[1])
-                elif type == "DRP":
-                    action = "buy"
+                if type == "DRP":
                     stock = row[3]
-                    units = int(row[5])
+                    drp_share_price = float(row[4])
 
+                    if stock not in drp_residual_balance: drp_residual_balance[stock] = 0
+                    drp_residual_balance[stock] += amount
+
+                    units = drp_residual_balance[stock] // drp_share_price
                     if units == 0: continue
 
-                    drp_share_price = float(row[4])
+                    drp_residual_balance[stock] -= amount
+                    action = "buy"
                     amount = units * drp_share_price
 
                     transaction = Portfolio.Transaction(date, action, stock, units, amount)

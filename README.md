@@ -12,13 +12,11 @@ Able to parse stock transactions from various sources into a unified format. The
 
 ### Dividends
 
-Does not offer functionality in parsing dividend data as providers do not offer sufficient data. Takes a csv file assumed to be formatted as date, amount, type (Direct Credit or DRP), security code, and DRP shares (amount of units received).
+Does not offer functionality in parsing dividend data as providers do not offer sufficient dividend data. Takes a csv file assumed to be formatted as date, amount, type (Direct Credit or DRP), security code, and DRP price.
 
-If the entry is labelled as a direct credit, the date and amount are stored in a dividend object, which is then stored in the portfolio dividends list.
+If the entry is labelled as 'Direct Credit', the date and amount are stored in the portfolio dividends list.
 
-Otherwise, if the entry is labelled as part of a DRP, an additional transaction is also added to mimick an individual receiving the direct credit, and then spending it manually to purchase the amount of shares.
-
-However, it is important to note that the total amount is not added in the dividend object, but rather, the DRP price of the share multiplied by the amount of units received. This is because if you did not receive an amount divisible by the DRP share price, it would not make sense to tax any amount leftover (since any leftover amount is kept with the dividend distributor, and not yourself.)
+Otherwise, if the entry is labelled as part of a DRP, this does not happen. Instead, the program tracks the growth of the DRP residual balance, and only when the balance is large enough to purchase shares at the DRP price, the date and only the amount used to purchase the shares are added to the portfolio dividends list. Additionally, a transaction is made for the purchased shares.
 
 ## Tax calculation
 
@@ -28,4 +26,4 @@ This works by keeping track of every individual share purchased (either manually
 
 These two values are then used to calculate the capital gain or loss on the individual share. These gains or losses are then summed up during a financial period to come up with the final taxable amount.
 
-Non-DRP dividends are also included in the capital gains calculation by simply adding the credit amount on after the fact.
+Non-DRP dividends are also included in the capital gains calculation by simply adding the credit amount on after the fact. For DRP dividends, pnly the functional amount that has been used to purchase shares is included in the capital gains calculation. This is because it would not make sense to tax any residual amount which you cannot access.
