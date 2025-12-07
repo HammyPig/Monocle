@@ -1,7 +1,13 @@
 [project]
 name = "monocle"
 version = "0.1.0"
-dependencies = ["jupyterlab"]
+dependencies = [
+    "jupyterlab",
+    "requests",
+]
+
+[tool.setuptools]
+packages = ["utils"]
 
 [build-system]
 requires = ["setuptools>=61.0"]

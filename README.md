@@ -26,6 +26,13 @@ This project uses `pyproject.toml` for dependency management, similar to `packag
    pip3 install .
    ```
 
+1. **Download data**:
+   ```bash
+   python scripts/download_data.py
+   ```
+   
+   This downloads all required data files and saves them to `data/raw/`.
+
 ## Usage
 
 1. **Activate the virtual environment** before working on the project:
