@@ -5,6 +5,7 @@ dependencies = [
     "jupyterlab",
     "jupytext",
     "pandas",
+    "pytest",
     "requests",
     "xlsx2csv",
     "yfinance",
