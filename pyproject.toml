@@ -4,8 +4,10 @@ version = "0.1.0"
 dependencies = [
     "jupyterlab",
     "jupytext",
+    "pandas",
     "requests",
     "xlsx2csv",
+    "yfinance",
 ]
 
 [tool.setuptools]
