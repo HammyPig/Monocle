@@ -5,6 +5,7 @@ dependencies = [
     "jupyterlab",
     "jupytext",
     "requests",
+    "xlsx2csv",
 ]
 
 [tool.setuptools]
