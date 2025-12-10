@@ -29,6 +29,63 @@ def ffill_between(series: pd.Series) -> pd.Series:
     return result
 
 
+def apply_leverage(
+    series: pd.Series,
+    leverage: float,
+    interest_rate_series: pd.Series,
+    expense_ratio: float = 0.0,
+    borrowing_multiplier: float = 1.0,
+    borrowing_spread: float = 0.0,
+) -> pd.Series:
+    """
+    Apply leverage multiplier to a series (prices or cumulative returns).
+
+    Leverage multiplies the period returns by the leverage factor.
+    Fees are calculated from an interest-rate series (scaled to daily using 252
+    trading days per year), plus an expense ratio, borrowing multiplier, and spread.
+
+    Args:
+        series: Price series or cumulative returns series.
+        leverage: Leverage multiplier (e.g., 2 for 2x leverage).
+        interest_rate_series: Series of annualized interest rates (as decimals),
+                              aligned to the series index. Required.
+        expense_ratio: Annual expense ratio as decimal (e.g., 0.0087 for 0.87%).
+                       Default 0.0.
+        borrowing_multiplier: Multiplier applied to the interest rate
+                              (e.g., 1.1 for a 10% markup). Default 1.0.
+        borrowing_spread: Annual spread added to the interest rate (e.g., 0.01 for 1%).
+                          Default 0.0.
+
+    Returns:
+        Series with leveraged returns, starting at 1.0.
+    """
+    # Convert to period returns
+    returns = series.pct_change(fill_method=None)
+
+    # Align interest rates to returns index
+    aligned_rates = interest_rate_series.reindex(returns.index, method="ffill")
+
+    # Use 252 trading days per year
+    trading_days_per_year = 252
+
+    # Effective annual rate includes multiplier and spread
+    effective_rate = (aligned_rates * borrowing_multiplier) + borrowing_spread
+    borrowing_cost = (leverage - 1) * effective_rate / trading_days_per_year
+    expense_cost = expense_ratio / trading_days_per_year
+    fee = borrowing_cost + expense_cost
+
+    # Apply leverage to returns and subtract fee
+    leveraged_returns = returns * leverage - fee
+
+    # Convert back to cumulative returns
+    result = (leveraged_returns + 1).cumprod()
+
+    # Set first value to 1.0
+    result.iloc[0] = 1.0
+
+    return result
+
+
 def series_to_cumulative_returns(series: pd.Series) -> pd.Series:
     """
     Convert a price series to cumulative returns.
