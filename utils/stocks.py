@@ -211,3 +211,35 @@ def apply_expense_ratio(series: pd.Series, expense_ratio: float) -> pd.Series:
     result.iloc[0] = 1.0
 
     return result
+
+
+def forward_return_ratio(
+    df: pd.DataFrame, column1: str, column2: str, days: int
+) -> pd.Series:
+    """
+    Calculate a time series of the ratio of forward returns between two columns in a DataFrame.
+
+    Forward returns on any given day shows the performance after x days if invested on that day.
+    The time series then is a distribution of forward returns that shows the probability of
+    performance. A ratio > 1.0 means column1 outperformed column2.
+
+    Args:
+        df: DataFrame that contains column1 and column2 as columns
+        column1: First column name
+        column2: Second column name
+        days: Number of days to look forward
+
+    Returns:
+        Series with the forward return ratio.
+    """
+    df = df[[column1, column2]].copy()
+    df = df.dropna()
+    df = rebase_dataframe(df)
+    forward1 = df[column1].shift(-days) / df[column1]
+    forward2 = df[column2].shift(-days) / df[column2]
+    return_ratio = forward1 / forward2
+    return_ratio = return_ratio.dropna()
+
+    return return_ratio
+
+    return return_ratio

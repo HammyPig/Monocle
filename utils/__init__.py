@@ -12,6 +12,7 @@ from utils.stocks import (
     download_yf_stocks,
     extract_yf_adj_close,
     get_rebased_stocks,
+    forward_return_ratio,
 )
 
 __all__ = [
@@ -26,4 +27,5 @@ __all__ = [
     "download_yf_stocks",
     "extract_yf_adj_close",
     "get_rebased_stocks",
+    "forward_return_ratio",
 ]
