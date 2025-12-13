@@ -186,3 +186,28 @@ def get_rebased_stocks(tickers, period="max", auto_adjust=False):
     df = extract_yf_adj_close(df)
     df = rebase_dataframe(df)
     return df
+
+
+def apply_expense_ratio(series: pd.Series, expense_ratio: float) -> pd.Series:
+    """
+    Apply expense ratio to a price series (for non-leveraged ETFs).
+
+    Subtracts the annual expense ratio on a daily basis (252 trading days per year)
+    from the period returns.
+
+    Args:
+        series: Price series or cumulative returns series
+        expense_ratio: Annual expense ratio as decimal (e.g., 0.0003 for 0.03%)
+
+    Returns:
+        Series with expense ratio applied, starting at 1.0
+    """
+    returns = series.pct_change(fill_method=None)
+    trading_days_per_year = 252
+    daily_fee = expense_ratio / trading_days_per_year
+
+    adjusted_returns = returns - daily_fee
+    result = (adjusted_returns + 1).cumprod()
+    result.iloc[0] = 1.0
+
+    return result
