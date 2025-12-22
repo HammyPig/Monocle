@@ -80,8 +80,14 @@ def apply_leverage(
     # Convert back to cumulative returns
     result = (leveraged_returns + 1).cumprod()
 
-    # Set first value to 1.0
-    result.iloc[0] = 1.0
+    # Set the value immediately before the first valid index to 1.0
+    first_valid_index = result.first_valid_index()
+    if first_valid_index is not None:
+        first_valid_position = result.index.get_loc(first_valid_index)
+
+        if first_valid_position > 0:
+            prev_idx = result.index[first_valid_position - 1]
+            result.loc[prev_idx] = 1.0
 
     return result
 
